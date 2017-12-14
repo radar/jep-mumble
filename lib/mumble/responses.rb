@@ -3,12 +3,16 @@ require 'forwardable'
 module Mumble
   class Responses
     extend Forwardable
-    delegate %i(<< count) => :@responses
+    delegate %i(count) => :@responses
 
-    attr_reader :responses
+    attr_reader :response
 
     def initialize(responses = [])
       @responses = responses
+    end
+
+    def add(response)
+      @responses << response
     end
 
     def answers_for_question(question)
@@ -16,9 +20,7 @@ module Mumble
     end
 
     def segmented(*segments)
-      @responses.select do |response|
-        segments.all? { |segment| response.in_segment?(segment) }
-      end
+      @responses.select { |response| response.within_segments?(segments) }
     end
   end
 end

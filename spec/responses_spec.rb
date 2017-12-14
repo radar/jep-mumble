@@ -22,8 +22,8 @@ RSpec.describe Mumble::Responses do
   end
 
   context "segmented" do
-    let(:response1) { instance_double(Mumble::Response, in_segment?: true) }
-    let(:response2) { instance_double(Mumble::Response, in_segment?: false) }
+    let(:response1) { instance_double(Mumble::Response, within_segments?: true) }
+    let(:response2) { instance_double(Mumble::Response, within_segments?: false) }
     let(:segment) { instance_double(Mumble::Segment) }
 
     subject(:responses) do

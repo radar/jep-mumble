@@ -40,15 +40,15 @@ RSpec.describe Mumble::Survey do
     let(:question) { instance_double(Mumble::Question) }
 
     context "when a survey has responses with answers" do
-      let(:responses) { double(:responses) }
+      let(:responses) { instance_double(Mumble::Responses) }
 
       before do
         allow(survey).to receive(:responses) { responses }
-        allow(responses).to receive(:answers_for) { [1, 2] }
+        allow(responses).to receive(:answers_for_question) { [1, 2] }
       end
 
       it "can find answers for specific questions" do
-        expect(survey.answers_for(question)).to eq([1, 2])
+        expect(survey.answers_for_question(question)).to eq([1, 2])
       end
     end
   end

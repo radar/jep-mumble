@@ -32,6 +32,17 @@ RSpec.describe Mumble::Response do
     end
   end
 
+  context "within_segments?" do
+    let(:segment) { instance_double(Mumble::Segment) }
+
+    context "when response is in a segment" do
+      before { allow(subject).to receive(:in_segment?) { true } }
+      it "returns true" do
+        expect(response).to be_within_segments([segment])
+      end
+    end
+  end
+
   context "has_segment?" do
     let(:segment) { instance_double(Mumble::Segment) }
 

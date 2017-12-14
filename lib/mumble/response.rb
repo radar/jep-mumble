@@ -15,6 +15,10 @@ module Mumble
       answers.detect { |answer| answer.question == question }
     end
 
+    def within_segments?(segments)
+      segments.all? { |segment| in_segment?(segment) }
+    end
+
     def in_segment?(segment)
       user.in_segment?(segment)
     end

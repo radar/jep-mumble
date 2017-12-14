@@ -14,15 +14,15 @@ module Mumble
     end
 
     def add_response(response)
-      @responses << response
+      @responses.add(response)
     end
 
     def add_question(question)
       @questions << question
     end
 
-    def answers_for(question)
-      responses.answers_for(question)
+    def answers_for_question(question)
+      responses.answers_for_question(question)
     end
   end
 end
