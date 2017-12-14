@@ -16,4 +16,22 @@ RSpec.describe Mumble::Response do
     response.add_answer(answer)
     expect(response.answers.count).to eq(1)
   end
+
+  context "has_segment?" do
+    let(:segment) { instance_double(Mumble::Segment) }
+
+    context "when the user has a segment" do
+      before { allow(user).to receive(:in_segment?) { true } }
+      it "returns true" do
+        expect(response).to be_in_segment(segment)
+      end
+    end
+
+    context "when the user does not have a segment" do
+      before { allow(user).to receive(:in_segment?) { false } }
+      it "returns false" do
+        expect(response).not_to be_in_segment(segment)
+      end
+    end
+  end
 end

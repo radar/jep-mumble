@@ -10,5 +10,9 @@ module Mumble
     def add_answer(answer)
       @answers << answer
     end
+
+    def in_segment?(segment)
+      user.in_segment?(segment)
+    end
   end
 end

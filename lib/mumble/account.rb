@@ -1,3 +1,4 @@
+
 module Mumble
   class Account
     attr_reader :name, :email

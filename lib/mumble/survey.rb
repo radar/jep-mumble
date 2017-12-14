@@ -5,7 +5,7 @@ module Mumble
     def initialize(account:, name:)
       @account = account
       @name = name
-      @responses = []
+      @responses = Responses.new
       @questions = []
     end
 
@@ -22,9 +22,7 @@ module Mumble
     end
 
     def answers_for(question)
-      @responses.flat_map(&:answers).select do |answer|
-        answer.question == question
-      end.map(&:value)
+      responses.answers_for(question)
     end
   end
 end

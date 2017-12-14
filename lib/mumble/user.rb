@@ -6,7 +6,7 @@ module Mumble
       @segments = segments
     end
 
-    def has_segment?(segment)
+    def in_segment?(segment)
       segments.include?(segment)
     end
   end

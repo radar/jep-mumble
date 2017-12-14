@@ -40,14 +40,11 @@ RSpec.describe Mumble::Survey do
     let(:question) { instance_double(Mumble::Question) }
 
     context "when a survey has responses with answers" do
-      before do
-        answer_1 = instance_double(Mumble::Answer, question: question, value: 1)
-        response_1 = instance_double(Mumble::Response, answers: [answer_1])
-        survey.add_response(response_1)
+      let(:responses) { double(:responses) }
 
-        answer_2 = instance_double(Mumble::Answer, question: question, value: 2)
-        response_2 = instance_double(Mumble::Response, answers: [answer_2])
-        survey.add_response(response_2)
+      before do
+        allow(survey).to receive(:responses) { responses }
+        allow(responses).to receive(:answers_for) { [1, 2] }
       end
 
       it "can find answers for specific questions" do

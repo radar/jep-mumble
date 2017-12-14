@@ -14,11 +14,11 @@ RSpec.describe Mumble::User do
 
   context "has_segment?" do
     it "returns true if the user has a segment" do
-      expect(user).to have_segment(segment_1)
+      expect(user).to be_in_segment(segment_1)
     end
 
     it "returns fale if the user has a segment" do
-      expect(user).not_to have_segment(segment_2)
+      expect(user).not_to be_in_segment(segment_2)
     end
   end
 end
