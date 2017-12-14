@@ -17,6 +17,21 @@ RSpec.describe Mumble::Response do
     expect(response.answers.count).to eq(1)
   end
 
+  context "answer_for_question" do
+    context "when there is a matching answer" do
+      let(:question) { instance_double(Mumble::Question) }
+      let(:answer) { instance_double(Mumble::Answer, question: question) }
+
+      before do
+        response.add_answer(answer)
+      end
+
+      it "finds the answer" do
+        expect(response.answer_for_question(question)).to eq(answer)
+      end
+    end
+  end
+
   context "has_segment?" do
     let(:segment) { instance_double(Mumble::Segment) }
 
