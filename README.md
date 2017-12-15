@@ -285,10 +285,110 @@ def answer_for_question(question)
 end
 ```
 
-The major benefit of this is that `Survey` has no knowledge at all of _how_ the answers are found, and so it makes reasoning about or changing that class easier: you don't have to think of it as having that responsibility because it delegates to `Responses`.
+The major benefit of this is that `Survey` has no knowledge at all of _how_ the answers are found, and so it makes reasoning about or changing that class easier: you don't have to think of it as having that responsibility because it delegates to `Responses`. Then `Responses` _itself_ doesn't know how the answers are found because `Response` has that responsibility.
 
 ### Stretch Goal #2: Adding a Segment class, and filtering responses
 
+This goal involves finding responses that match a particular set of segments. You can think of segments as a _category_ or a _group_ or a _demographic_ that people belong to. These are commonly used to segment our responses on our surveys at Culture Amp so we can see how a particular group of people responded to a survey.
 
+By design, the Mumble diagram did _not_ include a `Segment` class, and so we need to add in one of these to our Mumble codebase. I've added mine to `lib/mumble/segment.rb` and it's fairly bare-bones:
+
+```ruby
+module Mumble
+  class Segment
+    attr_reader :name
+
+    def initialize(name:)
+      @name = name
+    end
+  end
+end
+```
+
+An instance of the `Segment` class will represent a segment's name and that's all. Next, I need to associate segments and users together. Users have many different segments that they're a part of and so in the `User` class I've changed the code to this:
+
+```ruby
+module Mumble
+  class User
+    attr_reader :segments
+
+    def initialize(segments:)
+      @segments = segments
+    end
+  end
+end
+```
+
+I could also have an `email` attribute on the `User` class to identify the users more specifically, but I don't really care for or need that right now. A user just represents an anonymous user who is within a group of segments.
+
+The goal is to find the responses for a particular segment combination _on a survey_, so this makes me think that the method should go in the `Survey` class. Again: my goal is to get a _working_ method, not the _cleanest ever_ method to start with. Make it work, then make it pretty! So here's what I put down first:
+
+```ruby
+def responses_for_segments(segments)
+  responses.select do |response|
+    segments.all? { |segment| response.user.segments.include?(segment) }
+  end
+end
+```
+
+This method again violates the Law of Demeter (just like we saw in Goal #1) because `Survey` instances know too much about the `Response` instances it works with -- it knows that it has a `user` method, and it knows that whatever that returns has a `segments` method. It also breaks the Single Responsibility Principle: `Survey` know has knowledge about how to work with responses.
+
+So just like before, we're going to move the logic for working with a collection of responses out of `Survey` and into the `Responses` class. First, we'll need to re-define the `responses_for_segments` method to call out to that `responses` instance:
+
+```ruby
+def responses_for_segments(segments)
+  responses.for_segments(segments)
+end
+```
+
+Then in the `Responses` class, we can put the bulk of that logic:
+
+```ruby
+def for_segments(*segments)
+  responses.select do |response|
+    segments.all? { |segment| response.user.segments.include?(segment) }
+  end
+end
+```
+
+Ok, this is better! `Survey` doesn't know anything about how responses are filtered to the ones matching the segments, but `Responses` still knows a little too much about `Response` methods for my liking. So let's go a little further in `Responses#for_segment`:
+
+```ruby
+def for_segments(*segments)
+  responses.select { |response| response.within_segments?(segments) }
+end
+```
+
+This `Response#within_segments?` method would now contain that logic that was within the `select` method:
+
+```ruby
+def within_segments?(segments)
+  segments.all? { |segment| user.segments.include?(segment) }
+end
+```
+
+This `within_segments?` method still feels _heavy_ to me. The `Response` instances still need to know about how `User` instances are structured -- it knows about the `segments` method. So I think that this logic should live in the `User` class:
+
+```ruby
+def within_segments?(segments)
+  segments.all? { |segment| user.in_segment?(segment) }
+end
+```
+
+That's better! This `User#in_segment?` method would then contain that little bit of logic that used to live in that block:
+
+```ruby
+def in_segment?(segment)
+  segments.include?(segment)
+end
+```
+
+So to recap here:
+
+1. `Survey#responses_for_segments` delegates to `Responses#for_segments`
+2. `Responses#for_segments` filters the responses by using the `Response#within_segments?` method.
+3. `Response#within_segments?` determines if the response matches the specified segments by using `User#in_segment?` on each segment. If all of those checks return `true` then the response is considered to be within the segment.
+
+If all of that is a little confusing, check out `bin/stretch2.rb` which shows how I build all the relevant instances and then use these methods.
 
 ### Rubocop

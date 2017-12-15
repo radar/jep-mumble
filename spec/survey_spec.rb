@@ -52,4 +52,21 @@ RSpec.describe Mumble::Survey do
       end
     end
   end
+
+  context "responses_for_segments" do
+    context "when a survey has responses with answers" do
+      let(:responses) { instance_double(Mumble::Responses) }
+      let(:response) { instance_double(Mumble::Response) }
+      let(:segments) { [instance_double(Mumble::Segment)] }
+
+      before do
+        allow(survey).to receive(:responses) { responses }
+        allow(responses).to receive(:for_segments) { [response] }
+      end
+
+      it "can find answers for specific questions" do
+        expect(survey.responses_for_segments(segments)).to eq([response])
+      end
+    end
+  end
 end

@@ -19,7 +19,7 @@ module Mumble
       @responses.map { |response| response.answer_for_question(question) }
     end
 
-    def segmented(*segments)
+    def for_segments(*segments)
       @responses.select { |response| response.within_segments?(segments) }
     end
   end

@@ -34,11 +34,11 @@ RSpec.describe Mumble::Responses do
     end
 
     it "includes the first response" do
-      expect(responses.segmented(segment)).to include(response1)
+      expect(responses.for_segments(segment)).to include(response1)
     end
 
     it "does not include the second response" do
-      expect(responses.segmented(segment)).not_to include(response2)
+      expect(responses.for_segments(segment)).not_to include(response2)
     end
   end
 end

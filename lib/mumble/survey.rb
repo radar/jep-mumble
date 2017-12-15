@@ -24,5 +24,9 @@ module Mumble
     def answers_for_question(question)
       responses.answers_for_question(question)
     end
+
+    def responses_for_segments(segments)
+      responses.for_segments(segments)
+    end
   end
 end
