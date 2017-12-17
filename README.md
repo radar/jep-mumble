@@ -392,3 +392,15 @@ So to recap here:
 If all of that is a little confusing, check out `bin/stretch2.rb` which shows how I build all the relevant instances and then use these methods.
 
 ### Rubocop
+
+The last thing that I want to mention in this README isn't something that we've covered at all during the JEP, but we use extensively at CA: Rubocop.
+
+Rubocop is used to ensure a common coding style is used across our projects. The configuration for the Murmur repository lives at `.rubocop.yml` at the root of the directory, and my Mumble also has a much-smaller file in the same location. I've used Rubocop to ensure that my Ruby for this project is meeting some common Ruby style guidelines.
+
+Rubocop runs checks based on the [Ruby Style Guide](https://github.com/bbatsov/ruby-style-guide) which you may remember being mentioned during the original coding challenge. It can be good to read through this if only to see some good / bad examples, but it is very, very long. Typically the best way to consume this is to be linked to a rule, read the rule and understand just that one rule.
+
+If you're interested, take a look through my `.rubocop.yml` and think about why I've disabled certain "cops" (Rubocop checks), but left others enabled. You should try commenting out one disabled cop at a time and seeing what it would suggest if the cop was left enabled. Also: the documentation for these cops can be found here: http://rubocop.readthedocs.io/en/latest/cops/. You would probably find that helpful.
+
+By ensuring a common coding standard across the codebase, we prevent arguments about what the "right" way to write a piece of code is. The "right" way is whatever Rubocop suggests.
+
+ If someone disagrees with a Rubocop rule, typically a discussion will happen in #engineering about that rule. Sometimes, this leads to us disabling a rule... but we'd _never_ disable a rule without discussing the pros/cons of disabling it first.
