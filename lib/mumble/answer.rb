@@ -6,5 +6,9 @@ module Mumble
       @question = question
       @value = value
     end
+
+    def belong_to_question?(other_question)
+      question == other_question
+    end
   end
 end

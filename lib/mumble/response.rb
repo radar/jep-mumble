@@ -1,6 +1,6 @@
 module Mumble
   class Response
-    attr_reader :user, :answers
+    attr_reader :answers, :user
 
     def initialize(user:)
       @user = user
@@ -12,7 +12,7 @@ module Mumble
     end
 
     def answer_for_question(question)
-      answers.detect { |answer| answer.question == question }
+      answers.detect { |answer| answer.belong_to_question?(question) }
     end
 
     def within_segments?(segments)

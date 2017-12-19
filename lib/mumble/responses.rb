@@ -16,7 +16,9 @@ module Mumble
     end
 
     def answers_for_question(question)
-      @responses.map { |response| response.answer_for_question(question) }
+      @responses.map do |response|
+        response.answer_for_question(question)
+      end
     end
 
     def for_segments(*segments)
