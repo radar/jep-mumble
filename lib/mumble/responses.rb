@@ -3,9 +3,10 @@ require 'forwardable'
 module Mumble
   class Responses
     extend Forwardable
+
     delegate %i(count) => :@responses
 
-    attr_reader :response
+    attr_reader :responses
 
     def initialize(responses = [])
       @responses = responses
